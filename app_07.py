@@ -1,11 +1,11 @@
-#10月4日木曜日
+#8月3日木曜日
 #地図の表示をサブスレッドで行うプログラム
 #動画の処理をするコードを追加
 #my_schedule_func関数でoutputを取得できるようにする
 #value関数を作成し返し値で経度緯度を出すようにする
 #10フレーム毎に文字の検出をし、緯度経度の数値にし、著しい変化をした数値が発生した場合その数値を弾くようにする
 #マーカーの上のフキダシに動画を表示させる。
-#mjpg_streamerで表示中の画像で物体検出をする。
+
 import os
 import tornado.ioloop
 import tornado.web
@@ -14,7 +14,7 @@ import tornado.template
 import datetime
 
 import threading
-import pyw.math13
+import pyw.math13q
 import cv2
 import sys
 import time
@@ -27,27 +27,9 @@ if cap.isOpened() == False:
     print('OpenError')
     sys.exit()
 
-# 自作Haar-like特徴分類器の読み込み
-face_cascade = cv2.CascadeClassifier('./cascade/cascade01.xml')
-
 val_1 = 36.5316
 val_2 = 136.6532
-
-def cascade(frame):
-    # グレースケール変換
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    # 検知
-    faces = face_cascade.detectMultiScale(gray, 1.02)#1.21
-    for (x,y,w,h) in faces:
-        # 検知した顔を矩形で囲む
-        cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
-        # 顔画像（グレースケール）
-        roi_gray = gray[y:y+h, x:x+w]
-        # 顔画像（カラースケール）
-        roi_color = frame[y:y+h, x:x+w]
-
-    return frame
-            
+        
 def value(n):#outputの数値を合体させる関数
     val = 0
     global val_1#if文の中に書くとエラーが出る
@@ -132,7 +114,7 @@ if __name__ == "__main__":
         ret, frame = cap.read()
         if ret==False:
             break
-        cv2.imwrite('/var/tmp/mjpg-streamer/demo.jpg', cascade(frame))#ファイルをjpg形式で保存。
+        cv2.imwrite('/var/tmp/mjpg-streamer/demo.jpg', frame)#ファイルをjpg形式で保存。
         cv2.imshow('demo',frame)# frame = frame[960:990, 104:2000]#数字群を表示
         num = [21,22,23,24,26,27,28,29,31,32,33,34,36,37,38,39]#19 43 スペースのところ14,17,20,25,35,40#21~29,30~38が
         if cv2.waitKey(1) & 0xFF == ord('q'):#終了
